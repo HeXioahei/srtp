@@ -1,3 +1,4 @@
+[美团/浙大等联合提出MobileVLM | 骁龙888就可以实时运行的多模态大模型，边缘端多模态大模型之战打响了！！！ - 知乎](https://zhuanlan.zhihu.com/p/675392936)
 [轻量化VLM探索：MobileVLM V2 - 知乎](https://zhuanlan.zhihu.com/p/681878699)
 [多模态小模型：MobileVLM V2：为视觉语言模型带来更快更强的基准 - 知乎](https://zhuanlan.zhihu.com/p/690082320)
 
