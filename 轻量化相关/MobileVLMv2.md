@@ -10,4 +10,3 @@
 
 v2好于v1关键在于它对 Lightweight Downsample Projector（LDP）的改进：LDPv2。使得投影器有更少的参数量。
 
-# 
