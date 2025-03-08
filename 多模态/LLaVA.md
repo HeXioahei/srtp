@@ -8,6 +8,12 @@
 
 # llava 1.5
 
-结构改进，且数据集更丰富了
+结构改进。数据集更丰富了，且有更多的处理策略
+
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202503081619767.png)
+
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202503081620703.png)
+
+
 
 
