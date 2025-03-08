@@ -3,4 +3,5 @@
 
 整个方法和 llava 一致，只不过额外在 project 层前面插入了一个 token 修剪合并模块。主要有两个步骤：
 * 采取用于异常值检测的 [四分位范围](https://zhida.zhihu.com/search?content_id=241293581&content_type=Article&match_order=1&q=%E5%9B%9B%E5%88%86%E4%BD%8D%E8%8C%83%E5%9B%B4&zhida_source=entity) (IQR) 方法来选择重要的token。
+* 对
 
