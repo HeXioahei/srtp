@@ -15,5 +15,8 @@
 ![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202503081620703.png)
 
 
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202503081623009.png)
 
+**主要的限制和改进**：使用全图补丁，增加了训练时间，visual resamplers（如Qwen-VL、InstructBLIP、BLIP2中使用的Q-former）减少了visual patchs in LLMs，但是他们当前不能实现收敛，简单有效的visual resamplers的发展可以为未来加大指令微调多模态模型的尺度铺平道路
 
+# llava 1.6 （llava-next）
