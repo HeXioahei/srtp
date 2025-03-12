@@ -2,7 +2,7 @@
 
 本文将最近的代表性 MLLM 分为四种主要类型：多模态指令调整 (MIT)、多模态上下文学习 (M-ICL)、多模态思维链 (M-CoT) 和 [LLM 辅助视觉推理](https://zhida.zhihu.com/search?content_id=230768050&content_type=Article&match_order=1&q=LLM+%E8%BE%85%E5%8A%A9%E8%A7%86%E8%A7%89%E6%8E%A8%E7%90%86&zhida_source=entity) (LAVR)。
 
-# MIT
+# MIT（Multimodal Instruction Tuning）
 
 ![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202503112035847.png)
 
@@ -19,3 +19,5 @@ Self-Instruction：尽管现有的基准数据集可以提供丰富的数据源�
 Learnable Interface：当冻结预训练模型的参数时，可学习接口负责连接不同的模态。挑战在于如何有效地将视觉内容翻译成LLM可以理解的文本。一种常见且可行的解决方案是利用一组可学习的query token以基于查询的方式提取信息。此外，一些方法使用基于projection head的桥接方法来缩小模态差距。
 
 Expert Model：借助专家模型来简化视觉信息更简单，但是灵活性很差，而且会存在信息丢失的情况。
+
+# MICL（Multimodal In-Context Learning）
