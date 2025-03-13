@@ -1,6 +1,7 @@
-博客推荐：[A Survey on Multimodal Large Language Models-全文解读 - 知乎](https://zhuanlan.zhihu.com/p/641866192)
-[【综述论文阅读】A Survey on Multimodal Large Language Models 上_prompt-based ensemble expert language models with -CSDN博客](https://blog.csdn.net/weixin_46231495/article/details/145903655?ops_request_misc=&request_id=&biz_id=102&utm_term=a%20survey%20on%20multimodal%20large%20l&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-0-145903655.142^v102^pc_search_result_base9&spm=1018.2226.3001.4187)
-
+# 博客推荐：
+* [A Survey on Multimodal Large Language Models-全文解读 - 知乎](https://zhuanlan.zhihu.com/p/641866192)
+* [【综述论文阅读】A Survey on Multimodal Large Language Models 上_prompt-based ensemble expert language models with -CSDN博客](https://blog.csdn.net/weixin_46231495/article/details/145903655?ops_request_misc=&request_id=&biz_id=102&utm_term=a%20survey%20on%20multimodal%20large%20l&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-0-145903655.142^v102^pc_search_result_base9&spm=1018.2226.3001.4187)
+* [【综述论文阅读】A Survey on Multimodal Large Language Models下-CSDN博客](https://blog.csdn.net/weixin_46231495/article/details/146048896?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522167492ef860aee0e47ba555a2472ad22%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&request_id=167492ef860aee0e47ba555a2472ad22&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_ecpm_v1~rank_v31_ecpm-10-146048896-null-null.142^v102^pc_search_result_base9&utm_term=a%20survey%20on%20multimodal%20large%20l&spm=1018.2226.3001.4187)
 
 # 架构
 
@@ -123,11 +124,40 @@ DPO 使用简单的二分类损失从人类偏好标签中学习。与基于 PPO
 
 ## 封闭集评估
 
+**闭集问题**是指答案选项预先定义且限制在一个有限集合内的问题类型。评估通常在任务特定的数据集上进行。在这种情况下，响应可以通过基准指标自然地评判。
+
+**评估设置**通常包括：
+* 零样本（zero-shot） ：通常选择涵盖不同通用任务的广泛数据集，并将其划分为训练集（held-in）和测试集（held-out）。在前者上调整后，在后者上使用未见过的数据集甚至未见过的任务评估零样本性能。
+* 微调（finetuning）：通常出现在领域特定任务的评估中。
+
+上述评估方法通常局限于一小部分选定的任务或数据集，缺乏全面的定量比较。为此，一些研究努力开发专门为 MLLMs 设计的新基准。
+* Fu 等人构建了一个综合评估基准 MME，包含 14 个感知和认知任务。MME 中的所有指令-回答对均由人工设计，以避免数据泄露。
+* MMBench 是一个专门用于评估模型多维度能力的基准，使用 ChatGPT 将开放性回答与预定义选项匹配。
+* Video-ChatGPT 和 Video-Bench 针对视频领域，提出了专门的基准和评估工具。
+
+还有一些评估策略专注于评估模型的某个特定方面，例如 POPE 用于评估幻觉程度。
+
 ## 开放集评估
 ### 人工评估
+
+人工评分需要人类对生成的回答进行评估。这种方法通常涉及手工设计的问题，旨在评估特定维度的能力。
+* mPLUG-Owl 收集了一个与视觉相关的评估集，用于判断模型在自然图像理解、图表理解和流程图理解等方面的能力。
+* GPT4Tools 构建了两个数据集，分别用于微调性能和零样本性能的评估，并从思维、行动、论证和整体表现等方面对回答进行评价。
+
 ### GPT评分
+
+GPT 评分方法常用于评估多模态对话的性能。LLaVA 提出通过仅文本的 GPT-4 从不同方面（如帮助性和准确性）对回答进行评分。具体来说，从 COCO 验证集中随机抽取 30 张图像，每张图像关联一个简短问题、一个详细问题和一个复杂推理问题（通过 GPT-4 的自我指令生成）。模型生成的答案和 GPT-4 生成的答案都被发送给 GPT-4 进行比较。
+
+将仅支持文本的 GPT-4 用作评估者的主要问题是，评估仅基于与图像相关的文本内容（如标题或边界框坐标），而无法直接访问图像本身。
+
+随着 GPT 视觉接口的发布，一些研究开始利用更先进的 GPT-4V 模型来评估 MLLMs 的性能。Woodpecker使用 GPT-4V 根据图像判断模型回答的质量。由于 GPT-4V 可以直接访问图像，因此其评估结果预计比仅支持文本的 GPT-4 更加准确。
+
 ### 案例研究
 
+另一种补充方法是通过案例研究比较 MLLMs 的不同能力。例如，一些研究评估了两种典型的高级商用模型：GPT-4V 和 Gemini。
+* Yang 等人通过跨多个领域和任务构建一系列样本，对 GPT-4V 进行了深入的定性分析。这些任务涵盖了从基础技能（如生成标题和物体计数）到需要世界知识和推理的复杂任务（如笑话理解和作为具身代理的室内导航）。
+* Wen 等人通过设计针对自动驾驶场景的样本，对 GPT-4V 进行了更为聚焦的评估。
+* Fu 等人则通过将 Gemini-Pro 与 GPT-4V 进行对比，对其进行了全面评估。结果显示，尽管响应风格不同，GPT-4V 和 Gemini 在视觉推理能力上表现出相当的水平。
 
 # 扩展多模态模型
 
@@ -262,26 +292,3 @@ CoT 的核心思想是提示 LLMs 不仅输出最终答案，还输出得出该*
 # 结论
 在本文中，我们对现有的MLLM文献进行了综述，并提供了其主要方向的广泛视角，包括基本框架和相关扩展。此外，我们强调了当前需要填补的研究空白，并指出了一些有前景的研究方向。我们希望本次综述能为读者提供MLLM当前进展的清晰图景，并激发更多研究工作。
 
-
-
-本文将最近的代表性 MLLM 分为四种主要类型：多模态指令调整 (MIT)、多模态上下文学习 (M-ICL)、多模态思维链 (M-CoT) 和 [LLM 辅助视觉推理](https://zhida.zhihu.com/search?content_id=230768050&content_type=Article&match_order=1&q=LLM+%E8%BE%85%E5%8A%A9%E8%A7%86%E8%A7%89%E6%8E%A8%E7%90%86&zhida_source=entity) (LAVR)。
-
-# MIT（Multimodal Instruction Tuning）
-
-![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202503112035847.png)
-
-Instruction Tuning（指令调优）是一种涉及在指令格式数据集集合上微调预先训练的llm的技术。通过这种方式进行调整，LLM 可以通过遵循新指令泛化到看不见的任务，从而提高零样本性能。Instruction Tuning学习如何泛化到未知的任务，而不是像一对一的拟合特定任务。
-
-M-IT中校准预训练的一种常见方法是保持预训练模块(例如visual encoder和llm)冻结，仅训练一个可学习的接口。
-
-现有VQA和标题数据集的答案通常很简洁，直接使用这些数据集进行指令调优可能会限制MLLM的输出长度。解决这个问题有两种常见的策略：第一个是修改instruction，直接告诉LLM我们要简短、单句。第二种方法是延长现有答案的长度。
-
-Self-Instruction：尽管现有的基准数据集可以提供丰富的数据源，但它们通常不能很好地满足现实场景中的人类需求，例如多轮对话。为了解决这个问题，一些作品通过自我指导来收集样本[60]，这引导llm使用一些手工注释的样本来生成遵循文本指令的数据。
-
-混合指令调优不比多模态数据上单独调优差。
-
-Learnable Interface：当冻结预训练模型的参数时，可学习接口负责连接不同的模态。挑战在于如何有效地将视觉内容翻译成LLM可以理解的文本。一种常见且可行的解决方案是利用一组可学习的query token以基于查询的方式提取信息。此外，一些方法使用基于projection head的桥接方法来缩小模态差距。
-
-Expert Model：借助专家模型来简化视觉信息更简单，但是灵活性很差，而且会存在信息丢失的情况。
-
-# MICL（Multimodal In-Context Learning）
