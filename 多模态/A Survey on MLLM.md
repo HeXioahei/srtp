@@ -1,4 +1,11 @@
 博客推荐：[A Survey on Multimodal Large Language Models-全文解读 - 知乎](https://zhuanlan.zhihu.com/p/641866192)
+[【综述论文阅读】A Survey on Multimodal Large Language Models 上_prompt-based ensemble expert language models with -CSDN博客](https://blog.csdn.net/weixin_46231495/article/details/145903655?ops_request_misc=&request_id=&biz_id=102&utm_term=a%20survey%20on%20multimodal%20large%20l&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-0-145903655.142^v102^pc_search_result_base9&spm=1018.2226.3001.4187)
+
+
+# 架构
+典型架构抽象为三个模块，即预训练的**多模态编码器、预训练的大语言模型**以及连接它们的**多模态接口**。
+
+
 
 本文将最近的代表性 MLLM 分为四种主要类型：多模态指令调整 (MIT)、多模态上下文学习 (M-ICL)、多模态思维链 (M-CoT) 和 [LLM 辅助视觉推理](https://zhida.zhihu.com/search?content_id=230768050&content_type=Article&match_order=1&q=LLM+%E8%BE%85%E5%8A%A9%E8%A7%86%E8%A7%89%E6%8E%A8%E7%90%86&zhida_source=entity) (LAVR)。
 
