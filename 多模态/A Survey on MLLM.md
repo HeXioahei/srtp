@@ -37,6 +37,9 @@
 	* CogVLM 在每个 Transformer 层中插入了一个**视觉专家模块**，以实现视觉特征与语言特征之间的双向交互和融合。为了获得更好的性能，所引入模块的 QKV 权重矩阵初始化自预训练的 LLM。
 	* LLaMA-Adapter 在 Transformer 层中引入了**可学习的提示（prompt）**。这些提示首先嵌入了视觉知识，然后作为前缀与文本特征连接。
 
+对于token级融合，模态适配器的类型远不如**视觉token的数量**和**输入分辨率**重要。
+
+
 本文将最近的代表性 MLLM 分为四种主要类型：多模态指令调整 (MIT)、多模态上下文学习 (M-ICL)、多模态思维链 (M-CoT) 和 [LLM 辅助视觉推理](https://zhida.zhihu.com/search?content_id=230768050&content_type=Article&match_order=1&q=LLM+%E8%BE%85%E5%8A%A9%E8%A7%86%E8%A7%89%E6%8E%A8%E7%90%86&zhida_source=entity) (LAVR)。
 
 # MIT（Multimodal Instruction Tuning）
