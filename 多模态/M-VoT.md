@@ -1,4 +1,6 @@
-> [MVoT：首个多模态思维可视化，多模态中的CoT](https://mp.weixin.qq.com/s/r0Bn2EUwefIe_T2aTPGhgA)
+> 相关博客：[MVoT：首个多模态思维可视化，多模态中的CoT](https://mp.weixin.qq.com/s/r0Bn2EUwefIe_T2aTPGhgA)
+> 论文：[[2501.07542] Imagine while Reasoning in Space: Multimodal Visualization-of-Thought](https://arxiv.org/abs/2501.07542)
+
 
 # 摘要
 
