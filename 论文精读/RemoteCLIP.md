@@ -27,7 +27,7 @@ CLIP模型，在从十亿规模的图像-文本对中挖掘的跨模态监督下
 
 ![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202503180024407.png)
 
-LInfoNCE用来实现对表示的对齐与分组。
+LInfoNCE用来实现对表示的对齐与分组。该损失函数与CLIP不一样。
 
 大型CLIP也是遥感任务的强大模型：
 * 大规模对比图像文本预训练产生了适用于遥感领域的高质量视觉表示。
