@@ -9,5 +9,5 @@ github：[RayVentura/ShortGPT: 🚀🎬 ShortGPT - Experimental AI framework for
 ![71d0f3d07b2095b502d48f17da57a85.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202503061141435.png)
 
 
-![[BI的设计.pdf]]
+![[轻量化相关/三个核心模块的优化/轻量化LLM/剪枝/相关引用/BI的设计.pdf]]
 ![[目前是否有VLM模型用了shortGPT中“层删除”这种很直接的剪枝技术.pdf]]
