@@ -1,8 +1,8 @@
-博客推荐：[遥感论文 | Arxiv | RSRefSeg：基于SAM和CLIP的1.2B遥感语义分割基础模型，代码已开源！ - 知乎](https://zhuanlan.zhihu.com/p/25865061675)
-
-Github地址：[KyanChen/RSRefSeg: This is the pytorch implement of the paper "RSRefSeg: Referring Remote Sensing Image Segmentation with Foundation Models"](https://github.com/KyanChen/RSRefSeg)
-
-论文地址：[2501.06809](https://arxiv.org/pdf/2501.06809)
+> 其他博客推荐：[遥感论文 | Arxiv | RSRefSeg：基于SAM和CLIP的1.2B遥感语义分割基础模型，代码已开源！ - 知乎](https://zhuanlan.zhihu.com/p/25865061675)
+> 
+> Github地址：[KyanChen/RSRefSeg: This is the pytorch implement of the paper "RSRefSeg: Referring Remote Sensing Image Segmentation with Foundation Models"](https://github.com/KyanChen/RSRefSeg)
+> 
+> 论文地址：[2501.06809](https://arxiv.org/pdf/2501.06809)
 
 # 摘要
 
@@ -160,6 +160,7 @@ SAM处理**原始图像I2**和来自提示生成器的**稀疏/密集提示**，
 * 本文通过利用基础模型的知识来引用遥感图像分割，解决了当前方法在细粒度语义对齐和文本视觉一致性方面的局限性。
 * 介绍了RSRefSeg，这是一种包含12亿参数的基础模型。该模型的AtnPrompter架构通过将粗粒度文本语义激活的视觉特征转换为SAM模型的提示输入，将CLIP和SAM基础模型桥接起来，从而能够生成精确的引用掩码。
 * 该工作对RRSIS-D数据集的实验评估证明了RSRefSeg组件的有效性。该模型的整体性能超过了当代方法，获得了最先进的结果，并验证了基础模型在理解多模态遥感任务方面的有效性。
+
 # 一些其他知识点
 ## bimodal feature extraction（双峰特征提取）
 [双峰特征提取是什么-秘塔AI搜索](https://metaso.cn/search/8598646243021402112?q=%E5%8F%8C%E5%B3%B0%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96%E6%98%AF%E4%BB%80%E4%B9%88)
