@@ -80,7 +80,7 @@ AtnPrompter利用**文本语义学**作为**过滤器**来提取**与引用表�
 
 ![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202504102214320.png)：将三个分量级联
 
-![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202504102214498.png)：视觉参与特征
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202504102214498.png)：视觉关注特征
 
 ![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202504102220634.png)
 

@@ -2,7 +2,7 @@
 # 1. BLIP
 ## 1.1 主要创新点
 
-提供了一种对 web datasets 的 caption 进行降噪的方法。
+用三个VLP来训练出模型。提供了一种对 web datasets 的 caption 进行降噪的方法。
 
 ## 1.2 方法
 ### 1.2.1 模型架构
