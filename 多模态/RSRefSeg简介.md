@@ -11,7 +11,7 @@
 * **AttnPrompter生成提示**：基于CLIP的特征，生成稀疏提示和稠密提示。
 * SAM分割：利用原始图像和提示，生成最终的分割掩膜。
 
-*打个比方，CLIP就像是一个全面的学者，知道很多知识；AttnPqompter就像是个接地气的讲解员，把CLIP的那些宏泛的知识通俗易懂地告诉SAM；而SAM就是个专精的技术人员，根据AttnPqompter的提示来进行对图像的精细切割。*
+*打个比方，CLIP就像是一个全面的学者，知道很多知识；AttnPqompter就像是个接地气的讲解员，把CLIP的那些宏泛的知识通俗易懂地告诉SAM；而SAM就是个专精于分割的技术人员，根据AttnPqompter的提示来进行对图像的精细切割。*
 # 关键创新点
 
 ## Fine-tuned CLIP
