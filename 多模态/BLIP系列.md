@@ -9,7 +9,7 @@
 
 ![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202504242049115.png)
 
-BLIP多模态架构为[双塔架构](https://www.bing.com/search?q=%E5%8F%8C%E5%A1%94%E6%9E%B6%E6%9E%84&FORM=SSQNT1&adppc=EdgeStart&PC=LCTS&mkt=zh-CN)。论文中用3个vision language pretraining(VLP) task来激发模型的多模态能力。
+BLIP多模态架构为[双塔架构](https://www.bing.com/search?q=%E5%8F%8C%E5%A1%94%E6%9E%B6%E6%9E%84&FORM=SSQNT1&adppc=EdgeStart&PC=LCTS&mkt=zh-CN)（*即分别把两个领域的特征编码成一个向量，然后向量相似度进行召回*）。用3个vision language pretraining(VLP) task来激发模型的多模态能力。
 
 ### 1.2.2 三个VLP
 
