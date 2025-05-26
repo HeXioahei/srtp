@@ -237,3 +237,52 @@
 
 
 
+
+# 无权重初始化
+
+## 1 epoch
+
+```
+
+VLM参数量：26.224 百万
+[Image]: 椅子老人看书-Chair-Elderly-Reading.jpg
+🤖️: 的的
+
+
+
+[Image]: 太空宇航员-Astronaut-Space.jpg
+🤖️: 的
+
+
+
+[Image]: 自行车鲜花-Bicycle-Flowers.jpg
+🤖️: 车
+
+
+
+[Image]: 彩虹瀑布-Rainbow-Falls.jpg
+🤖️: 的
+
+
+
+[Image]: 舞蹈-dance.jpg
+🤖️: 在
+
+
+
+[Image]: 城市车水马龙-city-traffic.jpg
+🤖️: 
+
+
+
+[Image]: 熊猫草地-Panda-Grassland.jpg
+🤖️: 只的的在的的的的的
+
+
+
+[Image]: 小狗美女海边-Dog-Woman-Sea.jpg
+🤖️:
+
+```
+
+
