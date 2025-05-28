@@ -286,3 +286,139 @@ VLM参数量：26.224 百万
 ```
 
 
+# LDP
+
+## 1 epoch
+```
+
+VLM参数量：26.491 百万
+[Image]: 椅子老人看书-Chair-Elderly-Reading.jpg
+🤖️: 一个年轻人在学校的书房里读书
+
+
+
+[Image]: 太空宇航员-Astronaut-Space.jpg
+🤖️: 宇航员和飞船的太空探险。
+
+
+
+[Image]: 自行车鲜花-Bicycle-Flowers.jpg
+🤖️: 在一家小商店里开一家小型自行车的自行车。
+
+
+
+[Image]: 彩虹瀑布-Rainbow-Falls.jpg
+🤖️: 彩虹从云层上飘落,在树枝上发出美丽的光。
+
+
+
+[Image]: 舞蹈-dance.jpg
+🤖️: 在舞台上表演艺术的新颖艺术风格
+
+
+
+[Image]: 城市车水马龙-city-traffic.jpg
+🤖️: 一个城市的夜景。
+
+
+
+[Image]: 熊猫草地-Panda-Grassland.jpg
+🤖️: 一只黑白熊在森林里。
+
+
+
+[Image]: 小狗美女海边-Dog-Woman-Sea.jpg
+🤖️: 年轻女孩在海滩上看着她的脸上带着笑容。
+
+```
+
+## 2 epoch
+
+```
+
+VLM参数量：26.491 百万
+[Image]: 椅子老人看书-Chair-Elderly-Reading.jpg
+🤖️: 一个年迈的女人坐在一本书里看书
+
+
+
+[Image]: 太空宇航员-Astronaut-Space.jpg
+🤖️: 宇航员在太空中观测到的太空船。
+
+
+
+[Image]: 自行车鲜花-Bicycle-Flowers.jpg
+🤖️: 这个自行车的花园非常漂亮。
+
+
+
+[Image]: 彩虹瀑布-Rainbow-Falls.jpg
+🤖️: 彩虹的彩虹
+
+
+
+[Image]: 舞蹈-dance.jpg
+🤖️: 舞蹈艺术家在节目中演绎了一位流行歌手的舞。
+
+
+
+[Image]: 城市车水马龙-city-traffic.jpg
+🤖️: 在城市上空的城市,人们在街头看着汽车的夜景。
+
+
+
+[Image]: 熊猫草地-Panda-Grassland.jpg
+🤖️: 这只熊猫在海滩上散步
+
+
+
+[Image]: 小狗美女海边-Dog-Woman-Sea.jpg
+🤖️: 一个女孩在海滩上坐着,一边喝着咖啡,一边看着海浪,一边看着她的朋友的脸。
+
+```
+## 3 epoch
+
+```
+
+VLM参数量：26.491 百万
+[Image]: 椅子老人看书-Chair-Elderly-Reading.jpg
+🤖️: 老人和他的家人在秋天读书。
+
+
+
+[Image]: 太空宇航员-Astronaut-Space.jpg
+🤖️: 飞行员在太空中执行任务的太空任务
+
+
+
+[Image]: 自行车鲜花-Bicycle-Flowers.jpg
+🤖️: 自行车骑行在花园里
+
+
+
+[Image]: 彩虹瀑布-Rainbow-Falls.jpg
+🤖️: 水流在河上映射,一幅画面上,它像一只小鹿一样在水中游动。
+
+
+
+[Image]: 舞蹈-dance.jpg
+🤖️: 一个女孩在大学里的表演。
+
+
+
+[Image]: 城市车水马龙-city-traffic.jpg
+🤖️: 城市的街道和街道。
+
+
+
+[Image]: 熊猫草地-Panda-Grassland.jpg
+🤖️: 熊熊熊猫在森林里的草地上。
+
+
+
+[Image]: 小狗美女海边-Dog-Woman-Sea.jpg
+🤖️: 一个小男孩在海滩上散步,一边看着海滩上的女人。
+
+```
+
+感觉可能是数据集的问题。
