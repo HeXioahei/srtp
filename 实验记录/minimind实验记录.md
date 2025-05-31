@@ -64,6 +64,9 @@
 
 # 预训练
 ## 一个epoch
+![W&B Chart 2025_5_28 12_39_30.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202505281239757.png)
+
+
 ### 训练过程
 [MiniMind-V Pretrain-Epoch-1-BatchSize-16-LearningRate-0.0004-pretrain_512pth | MiniMind-V – Weights & Biases](https://wandb.ai/3078158560-fuzhou-university/MiniMind-V/runs/tw79hc1p?nw=nwuser3078158560)
 ### 测试结果
@@ -117,6 +120,8 @@
 
 [MiniMind-V Pretrain-Epoch-3-BatchSize-16-LearningRate-0.0004-pretrain_vlm_512_0pth | MiniMind-V – Weights & Biases](https://wandb.ai/3078158560-fuzhou-university/MiniMind-V/runs/e8bcelom?nw=nwuser3078158560)
 
+![W&B Chart 2025_5_28 12_38_32.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202505281238464.png)
+
 ### 测试结果
 
 与一个epoch差不多。
@@ -126,6 +131,9 @@
 ## 训练过程
 
 [MiniMind-V SFT-Epoch-2-BatchSize-4-LearningRate-1e-06 | MiniMind-V – Weights & Biases](https://wandb.ai/3078158560-fuzhou-university/MiniMind-V/runs/yiakhg0i?nw=nwuser3078158560)
+
+![W&B Chart 2025_5_28 12_37_37.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202505281238522.png)
+
 
 ## 测试结果
 
@@ -287,6 +295,8 @@ VLM参数量：26.224 百万
 
 
 # LDP
+
+![W&B Chart 2025_5_28 12_36_10.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202505281236344.png)
 
 ## 1 epoch
 ```
