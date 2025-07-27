@@ -77,7 +77,7 @@ $$ p(Y_a|H_v,H_q) = \prod_{i=1}^{L} p(y_i|H_v,H_q, y_{<i}). \quad(2)$$
 ### LDP（轻量级下采样投影器） 
 * Pointwise：相当于 1 * 1 * 3 的卷积核。
 * Depthwise：每个卷积核仅作用于输入张量的单个通道。s代表步长。
-* [Depthwise卷积与Pointwise卷积](深度学习中的一些概念#Depthwise卷积与Pointwise卷积)
+* [Depthwise卷积与Pointwise卷积](深度学习中的一些概念.md#Depthwise卷积与Pointwise卷积)
 * GeLU
 * Layer Normalization
 * Pixel-wise addition
@@ -110,7 +110,7 @@ $$ p(Y_a|H_v,H_q) = \prod_{i=1}^{L} p(y_i|H_v,H_q, y_{<i}). \quad(2)$$
 
 ## language model pre-training
 **相关参数**：
-* [global batch_size](全局batch_size)=5,242,880。
+* [global batch_size](全局batch_size.md)=5,242,880。
 * peak learning rate=3e-4，按照余弦策略，降到 3e-5。
 * 用 2000 次迭代（iterations）来热身（warm up）
 * 使用AdamW优化器，其中β1 = 0.9和β2 = 0.95，权重衰减正则化值为0.1。

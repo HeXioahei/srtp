@@ -22,7 +22,7 @@
 		* 层数少，仅8层。
 		* 用GQA，kv_cache，注意力头少。
 		* FFN较为精简。
-		* [RMSNorm](RMSNorm)：与LayerNorm相比，RMSNorm的计算更为简便，前者需要遍历两边样本分别求出均值和方差，而后者只需要一次遍历求出均方差。
+		* [RMSNorm](RMSNorm.md)：与LayerNorm相比，RMSNorm的计算更为简便，前者需要遍历两边样本分别求出均值和方差，而后者只需要一次遍历求出均方差。
 	* 简单高效的投影器设计：
 		* 用MLP，而非Cross-Attention机制。这与LLaVA-1的设计思路一致，但MiniMind-V通过参数精简实现更高效率。
 * 数据集上：

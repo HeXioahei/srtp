@@ -4,7 +4,7 @@
 
 ![4d497f1d-c3c6-420a-98a7-deeaf09b383a](file:///C:/Users/Lenovo/Pictures/Typedown/4d497f1d-c3c6-420a-98a7-deeaf09b383a.png)
 
-有两个输入，一个是图像的patch embedding，即Image Token。一个是可学习的group token。
+有两个输入，一个是图像的patch embedding，即Image Token。一个是可学习的group token（由正态分布采样初始化）。
 
 image: `[224, 224]`, patch_size: `[16, 16]`, 用的是vit small，所以特征维度为384。最开始为了有尽可能多的聚类中心，所以group token设置了64个，维度和image token对齐也为384。
 
@@ -45,3 +45,26 @@ image: `[224, 224]`, patch_size: `[16, 16]`, 用的是vit small，所以特征�
 * 更像是一个图像编码器，没有用好dense prediction这一特性，无法获取更多尺度的上下文信息。
 * 无法很好地分割背景类。该篇论文区分背景类的方法是设置一个阈值，只有当group和文本类别的相似度超过了这个阈值，这个group才算是一个前景类别，不然直接当作背景处理。而这个阈值不太好设定，作者是将其设置为了90%，但是在某些单张图片中类别很多的数据集上分割效果很差。
 * GroupViT将分割做得很好了，但是对语义分割做得没有那么好，也就是说，它可以很准确地切割好不同类别的mask，但是却没有很好地分类出每个mask代表着哪一类。
+
+
+# 模型代码
+
+* AttnBlock
+	* MLP
+	* Attention
+* CrossAttnBlock
+	* Attention
+* GroupingBlock
+	* MLP
+	* CrossAttnBlock
+	* AssignAttention
+* GroupingLayer
+	* AttnBlock
+	* GroupingBlock
+* PatchEmbed
+* GroupViT
+	* PatchEmbed
+
+* build_text_transform
+	* WordAugTokenizeWrapper
+	* Tokenize
