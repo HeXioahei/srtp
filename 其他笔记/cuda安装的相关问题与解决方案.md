@@ -1,4 +1,4 @@
-
+[各版本cuda下载链接](https://developer.nvidia.com/cuda-toolkit-archive)
 
 ---
 # 博客
@@ -212,3 +212,7 @@ sudo sh cuda_11.3.0_465.19.01_linux.run --override
 
 ## 问题和解决二
 点击continue之后，选完选项之后，可能会跳出来一个提示说“已经存在一些版本，是否要update to this installation”，可以选择“no”，这样就不会覆盖之前的版本。
+
+# Windows上安装
+[Win11配置多个CUDA环境_怎么管理多个cuda-CSDN博客](https://blog.csdn.net/ruvikm/article/details/133430914)
+
