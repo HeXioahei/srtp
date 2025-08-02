@@ -8,4 +8,7 @@ conda env remove -n <your_env>
 # 查看现有的所有环境
 conda env list
 
+# 复制conda环境
+conda create --name newenv --clone oldenv
+
 ```
