@@ -216,3 +216,17 @@ sudo sh cuda_11.3.0_465.19.01_linux.run --override
 # Windows上安装
 [Win11配置多个CUDA环境_怎么管理多个cuda-CSDN博客](https://blog.csdn.net/ruvikm/article/details/133430914)
 
+![c4a260d8-5189-45c5-b981-d8c3e4b5f806.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202508031119981.png)
+
+%CUDA_PATH_V11_3%\lib\x64
+%CUDA_PATH_V11_3%\include
+%CUDA_PATH_V11_3%\extras\CUPTI\lib64
+%CUDA_PATH_V11_3%\bin
+%CUDA_PATH_V11_3%\libnvvp
+%CUDA_PATH_V12_6%\lib\x64
+%CUDA_PATH_V12_6%\include
+%CUDA_PATH_V12_6%\extras\CUPTI\lib64
+%CUDA_PATH_V12_6%\bin
+%CUDA_PATH_V12_6%\libnvvp
+
+
