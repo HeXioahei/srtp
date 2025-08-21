@@ -11,4 +11,9 @@ conda env list
 # 复制conda环境
 conda create --name newenv --clone oldenv
 
+# 列出当前环境下的库
+conda list
+
+# 只看torch相关的库
+conda list | grep torch
 ```

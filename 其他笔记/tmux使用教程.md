@@ -2,6 +2,21 @@
 
 [Tmux教程 （一文就够）-CSDN博客](https://blog.csdn.net/CSSDCC/article/details/121231906)
 
+# 简易教程
+### tmux使用教程（使用tmux建立的会话运行代码，即使电脑断网，服务器上依然运行代码，好用！！！）
+
+- sudo apt-get install tmux 安装tmux包
+    
+- tmux new -s test 创建一个新的会话，名为test
+    
+- 按ctrl+b松手再按d可以退出该会话
+    
+- tmux attach -t test 返回/连接test会话窗口
+    
+- tmux kill-session -t test 杀掉test会话
+    
+- tmux ls可以查看当前所有的会话
+
 ## 问题：
 ```
 
