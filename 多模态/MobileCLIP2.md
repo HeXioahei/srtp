@@ -61,7 +61,7 @@ $$\mathcal{L}_{Distill} = \frac{1}{2bK} \sum_{k=1}^K \underbrace{KL\left(\mathca
 
 ### 2.2 更优的基础数据集：DFN
 
-多模态强化训练始于包含真实图文对的基础数据集，这类数据集通常来自网页。DataComp（Gadre 等人，2023）表明，通过基于图文兼容性等分数的过滤，可显著提升大规模图文数据集的质量：其在 120 亿样本池上应用 BestPool 过滤，得到 DataComp-1B 数据集，并作为 MobileCLIP 的基础数据集；同时，DataComp 还公开了原始 120 亿样本，作为数据集筛选方法的基准。DFN（Fang 等人，2024a）提出使用在高质量数据上训练的过滤网络筛选数据：将该模型应用于 DataComp-12B 样本池，得到 DFN-2B 数据集；此外，他们还从网页收集了与 DataComp-12B 无重叠的 30 亿图像，筛选后与 DFN-2B 合并，形成 DFN-5B 数据集。
+多模态强化训练始于包含真实图文对的基础数据集，这类数据集通常来自网页。DataComp（Gadre 等人，2023）表明，通过基于图文兼容性等分数的过滤，可显著提升大规模图文数据集的质量：其在 120 亿样本池上应用 BestPool 过滤，得到 DataComp-1B 数据集，并作为 MobileCLIP 的基础数据集；同时，DataComp 还公开了原始 120 亿样本，作为数据集筛选方法的基准。DFN（Fang 等人，2024a）提出使用在高质量数据上训练的==过滤网络筛选数据==：将该模型应用于 DataComp-12B 样本池，得到 DFN-2B 数据集；此外，他们还从网页收集了与 DataComp-12B 无重叠的 30 亿图像，筛选后与 DFN-2B 合并，形成 DFN-5B 数据集。
 
 本文研究用 DFN-5B 替代 MobileCLIP 中基础数据集的效果。消融实验使用 Vasu 等人（2024c）提出的 DataComp-1B 的 1200 万均匀采样子集（DataComp-1B12M，用于快速实验），并类似地从 DFN-5B 中采样 1200 万样本，得到 DFN-5B12M。表 2 对比了有无蒸馏 / 合成描述时的训练性能：结果显示，结合蒸馏与合成描述后，DFN-5B12M 较 DataComp-1B12M 最多提升 1.4%；尽管这一提升小于无蒸馏 / 合成描述时的 6%，但仍超过标准差范围，具有统计显著性。
 
@@ -86,9 +86,9 @@ $$\mathcal{L}_{Distill} = \frac{1}{2bK} \sum_{k=1}^K \underbrace{KL\left(\mathca
 
 #### Logit 缩放
 
-CLIP 模型训练时会调优 logit 缩放（范围 0-100），MobileCLIP 将 logit 缩放与 KD 损失中的温度缩放设为相同值。本文发现，DFN 与 DataComp 模型的 logit 缩放并非 KD 的最优值，需进一步调优。表 3 展示了训练 MobileCLIP-B 时各教师模型的最优 logit 缩放：结果表明，logit 缩放并非敏感超参数 —— 在 5 个单位范围内取值，性能均相近。
+CLIP 模型训练时会调优 logit 缩放（范围 0-100），MobileCLIP 将 logit 缩放与 KD 损失中的温度缩放设为相同值。本文发现，DFN 与 DataComp 模型的 logit 缩放并非 KD 的最优值，需进一步调优。表 3 展示了训练 MobileCLIP-B 时各教师模型的最优 logit 缩放：结果表明，==logit 缩放并非敏感超参数== —— 在 5 个单位范围内取值，性能均相近。
 
-**表 3：不同教师模型的最优 logit 缩放存在差异**数据集为 DFN-5B12M，合成描述由 2.4 节的 CoCa-DFN-2B 生成。损失系数\(\lambda\)设为 1.0，训练使用强图像增强。
+**表 3：不同教师模型的最优 logit 缩放存在差异**数据集为 DFN-5B12M，合成描述由 2.4 节的 CoCa-DFN-2B 生成。损失系数 $\lambda$ 设为 1.0，训练使用强图像增强。
 
 |教师模型|Logit 缩放|IN-val 准确率（%）|Flickr30k 检索率（%）|38 项任务平均性能（%）|
 |---|---|---|---|---|
