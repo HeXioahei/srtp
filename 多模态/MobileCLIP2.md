@@ -200,6 +200,8 @@ CLIP 与 CoCa 模型的上下文长度通常设为 77。本文尝试将训练与
 |DFNDR-5B12M|65.9±0.3|75.4±0.2|56.5±0.3|
 |DFNDR-2B12M|65.5|74.8|56.4|
 
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202509211648711.png)
+
 ## 3. 架构设计
 
 MobileCLIP2 的架构既包含与 MobileCLIP 相似的变体，也新增了两种变体：具体而言，我们训练了 MobileCLIP2-S0、MobileCLIP2-S2、MobileCLIP2-B（其中 MobileCLIP2-S0 使用标准 “Base” 文本编码器，移除 S1 变体）；此外，新增 MobileCLIP2-S3 与 MobileCLIP2-S4 两种变体。这些变体的文本编码器为纯 Transformer 架构，图像编码器基于 FastViT（Vasu 等人，2023b）—— 该架构采用 Vasu 等人（2023a）提出的训练时过参数化块。
@@ -207,8 +209,6 @@ MobileCLIP2 的架构既包含与 MobileCLIP 相似的变体，也新增了两�
 较小的变体（MCi0、MCi1、MCi2）为混合视觉 Transformer，包含 4 个不同计算阶段；新增的 MCi3 与 MCi4 则在输入张量 4 倍下采样后，额外增加一个 Transformer 阶段（图 3a）。五阶段设计在规模扩展时具有两大优势：1）参数可分布在五个阶段，且最大层仅需处理 1/4 数量的令牌；2）更易适配高分辨率输入。
 
 我们通过实验验证了不同图像分辨率下的设计有效性：图 3b 中，将 MCi2 缩放至与 MCi3 参数规模相同（1.25 亿参数），并在四种输入分辨率下测试性能。结果显示，五阶段设计的 MCi3 较缩放后的 MCi2，性能权衡更优：在低分辨率（256×256）下，MCi3 速度是 MCi2 的 1.9 倍；在高分辨率（1024×1024）下，速度提升至 7.1 倍。高分辨率下的响应速度对图像编码器微调至关重要 —— 例如图像分割等密集预测任务，输入分辨率通常为 512×512。
-
-![](data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%27400%27%20height=%27256%27/%3e)![image](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1NiIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==)
 
 ## 4. 实验
 
@@ -333,10 +333,4 @@ MobileCLIP2 在不同延迟区间均实现 ImageNet-1k 零样本验证准确率�
 
 本文提出的基础模型家族专为移动与边缘设备部署优化，有助于扩大基础模型的应用范围，为更广泛用户群体开发应用提供支持。MobileCLIP2 可用于图像分类等各类场景，但其输出性能会受训练数据集与教师模型固有偏差的影响。
 
-## 致谢
 
-感谢 Albin Madappally Jose、Barry Theobald、Chen Huang、Rick Chang 及苹果公司机器学习研究团队，在项目期间提供的帮助与讨论。
-
-## 参考文献（注：保留原文格式，关键会议 / 期刊名已译为中文）
-
-Lucas Beyer, Xiaohua Zhai, Amélie Royer, Larisa Markeeva, Rohan Anil, and Alexander Kolesnikov. 知识蒸馏：优秀的教师需兼具耐心与一致性. In _IEEE/CVF 计算机视觉与模式识别会议论文集_, 第 10925-10934 页，2022.Rishi Bommasani, Drew A Hudson, Ehsan Adeli, Russ Altman, Simran Arora, Sydney von Arx, Michael S Bernstein, Jeannette Bohg, Antoine Bosselut, Emma Brunskill, et al. 基础模型的机遇与风险. arXiv 预印本 arXiv:2108.07258, 2021.Qingqing Cao, Bhargavi Paranjape, and Hannaneh Hajishirzi. PuMer：通过剪枝与合并令牌优化视觉语言模型效率. In _第 61 届计算语言学协会年会论文集（第 1 卷：长论文）_, 2023.Fredrik Carlsson, Philipp Eisen, Faton Rekathati, and Magnus Sahlgren. 跨语言与多语言 CLIP. In _第 13 届语言资源与评估会议论文集_, 第 6848-6854 页，2022.Kai Chen, Jiaqi Wang, Jiangmiao Pang, Yuhang Cao, Yu Xiong, Xiaoxiao Li, Shuyang Sun, Wansen Feng, Ziwei Liu, Jiarui Xu, Zheng Zhang, Dazhi Cheng, Chenchen Zhu, Tianheng Cheng, Qijie Zhao, Buyu Li, Xin Lu, Rui Zhu, Yue Wu, Jifeng Dai, Jingdong Wang, Jianping Shi, Wanli Ouyang, Chen Change Loy, and Dahua Lin. MMDetection：开源 MMLab 检测工具包与基准. arXiv 预印本 arXiv:1906.07155, 2019.Xinlei Chen, Hao Fang, Tsung-Yi Lin, Ramakrishna Vedantam, Saurabh Gupta, Piotr Dollár, and C Lawrence Zitnick. Microsoft COCO 描述：数据收集与评估服务. arXiv 预印本 arXiv:1504.00325, 2015.Zhe Chen, Yuchen Duan, Wenhai Wang, Junjun He, Tong Lu, Jifeng Dai, and Yu Qiao. 用于密集预测的视觉 Transformer 适配器. In ICLR, 2023.MMSegmentation 贡献者. MMSegmentation：开源 MMLab 语义分割工具包与基准. [https://github.com/open-mmlab/mmsegmentation](https://github.com/open-mmlab/mmsegmentation), 2020.Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. BERT：用于语言理解的深度双向 Transformer 预训练. In _2019 年北美计算语言学协会年会论文集：人类语言技术（第 1 卷：长论文与短论文）_, 第 4171-4186 页，2019.Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg Heigold, Sylvain Gelly, et al. 一张图像相当于 16×16 个单词：用于大规模图像识别的 Transformer. arXiv 预印本 arXiv:2010.11929, 2020.（后续参考文献均遵循此格式，保留作者名、年份及会议 / 期刊信息，关键术语已译为中文，技术工具名与模型名保留原文。）

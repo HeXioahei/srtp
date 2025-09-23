@@ -49,6 +49,8 @@ CLIP 训练数据集多为网页级噪声图文对，自原始 CLIP 模型 [47] 
 近年来，针对资源受限设备视觉任务的高效架构层出不穷，可大致分为纯卷积架构 [11,23,27,28,41,48,50,61]、基于 Transformer 的架构 [12,40,59]，以及卷积 - Transformer 混合架构 [22,36,38,44,53,62]；文本编码领域则有基于 Transformer 的架构 [63] 和卷积 - Transformer 混合架构 [20,67]。此外，TinyCLIP [68] 通过剪枝 ViT 架构得到更小更快的 CLIP 模型，PuMer [3] 通过减少图文令牌数量提升视觉 - 语言模型推理速度，但这些模型规模仍较大，难以在移动设备上高效部署。本文提出==改进的卷积 - Transformer 混合架构==，==同时适配视觉和文本模态==，性能优于近期最优架构 [22,38,44,53]；且 [3,68] 中的优化方法可进一步提升 MobileCLIP 的效率。
 
 ![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202509201542068.png)
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202509201635296.png)
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202509211732478.png)
 
 ## 3. 多模态强化训练
 
@@ -95,8 +97,6 @@ CLIP 训练所用的图文数据集多源自网页，存在固有噪声。DataCo
 
 需注意，由于计算蒸馏损失所需的教师嵌入已作为数据集的一部分存储，学生模型仅需一次前向传播即可计算总损失，无需额外的教师相关计算。*（ 无需额外的教师相关计算： 因为教师模型的输出已经预先计算好并存储在数据集里了，所以在训练循环中，当需要计算蒸馏损失时，程序只需要直接从硬盘或内存中读取预先存好的“教师嵌入”即可，完全不需要在运行时再次调用那个庞大、耗时的教师模型。）*
 
-![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202509201635296.png)
-
 ## 4. 架构设计
 
 ### 4.1 文本编码器
@@ -116,10 +116,15 @@ FastViT 的 FFN 块采用 4.0 倍的 MLP 扩展比，而近期研究 [39,68] 发
 表 1 对比了 MCi 编码器与同规模 FastViT-MA36 编码器（均作为 CLIP 图像编码器）的性能：在 DataCompDR-12M 上训练 30k 迭代（约 0.24B 样本）后，本文 MCi 模型的零样本 IN-val 准确率显著更高，且速度提升 16.3%。
 
 ![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202509201802143.png)
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202509211734652.png)
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202509211735234.png)
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202509211736546.png)
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202509211736458.png)
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202509211737406.png)
 
 ## 5. 实验
 
-### 5.1 实验设置与评估指标
+### 5.0 实验设置与评估指标
 
 #### 评估指标
 
@@ -163,7 +168,7 @@ MobileCLIP 架构由 MCi（图像编码器）与 MCt（文本编码器）配对�
 
 延迟测试采用各方法对应的输入尺寸：在 iPhone 设备上，通过 Core ML Tools（v7.0）[58] 导出模型，在搭载 iOS 17.0.3 的 iPhone 12 Pro Max 上运行；所有模型的批次大小均设为 1，测试流程遵循 [61]。
 
-### 5.2 消融实验
+### 5.1 消融实验
 
 消融实验基于 ViT-B/16:Base 编码器，在 DataComp-12M 上训练 30k 迭代，全局批次大小为 8k（约 20 轮），分析训练与架构各组件的影响（表 2 为消融实验总结）。
 
@@ -173,7 +178,7 @@ MobileCLIP 架构由 MCi（图像编码器）与 MCt（文本编码器）配对�
 
 #### 合成描述
 
-与图像增强类似，合成描述（或描述增强）可进一步提升 CLIP 模型性能，尤其在图文检索任务中。表 2 显示，标准 CLIP 训练（\(\lambda=0\)）中，结合真实描述与合成描述的批次，可使 IN-val 准确率 + 7.4%，Flickr30k 检索率 + 27.5%；表 3a 显示，仅使用蒸馏损失的 CLIP 训练（\(\lambda=1\)）也呈现类似趋势。表 3b 分析了\(\lambda\)的影响：\(\lambda=1.0\)时 IN-val 性能最优，\(\lambda=0.7\)时 Flickr30k 性能最优。此前利用合成描述的工作多聚焦检索性能提升 [32,70]，而蒸馏工作多聚焦零样本分类 [56]；在大规模实验中，MobileCLIP-B 采用\(\lambda=0.75\)平衡两者，小型变体采用\(\lambda=1.0\)。
+与图像增强类似，合成描述（或描述增强）可进一步提升 CLIP 模型性能，尤其在图文检索任务中。表 2 显示，标准 CLIP 训练（$\lambda=0$）中，结合真实描述与合成描述的批次，可使 IN-val 准确率 + 7.4%，Flickr30k 检索率 + 27.5%；表 3a 显示，仅使用蒸馏损失的 CLIP 训练（$\lambda=1$）也呈现类似趋势。表 3b 分析了 $\lambda$ 的影响：$\lambda=1.0$ 时 IN-val 性能最优，$\lambda=0.7$ 时 Flickr30k 性能最优。此前利用合成描述的工作多聚焦检索性能提升 [32,70]，而蒸馏工作多聚焦零样本分类 [56]；在大规模实验中，MobileCLIP-B 采用 $\lambda=0.75$ 平衡两者，小型变体采用 $\lambda=1.0$ 。
 
 #### 集成教师模型
 
@@ -202,6 +207,8 @@ MobileCLIP 架构由 MCi（图像编码器）与 MCt（文本编码器）配对�
 - 与 CLIPA [34]（通过多分辨率训练提升效率）相比，DataCompDR-12M 训练更高效：CLIPA 需 26.9 亿多分辨率样本（等效于 0.5 亿 224×224 样本），IN-val 准确率仅 63.2%，而 MobileCLIP-B 仅用 0.37 亿样本，准确率达 65.3%；
 - 与 TinyCLIP 相比：TinyCLIP-39M/16 延迟更高、准确率更低；TinyCLIP-8M/16 与 MobileCLIP-S0 延迟相近（2.6ms vs 3.1ms），但准确率显著更低（41.1% vs 59.1%）。
 
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202509211740671.png)
+
 ### 5.3 学习效率
 
 已知知识蒸馏的长期训练可持续提升分类模型性能 [2]，图 6a 显示，强化训练同样受益于长期训练：在 DataComp-1B 的 1200 万子集上训练 120 轮后，ImageNet-val 零样本准确率达 71.7%，而非强化训练最高仅 55.7%。
@@ -224,8 +231,6 @@ MobileCLIP 架构由 MCi（图像编码器）与 MCt（文本编码器）配对�
 
 本文提出适用于端侧 CLIP 推理（低延迟、小尺寸）的对齐图文骨干网络 MobileCLIP，同时提出 DataCompDR—— 通过图像描述生成预训练模型和 CLIP 强集成模型知识强化的 DataComp 数据集。实验验证，基于 DataCompDR 的训练学习效率提升 10 倍至 1000 倍；MobileCLIP 模型在延迟 - 准确率权衡上实现当前最优，且在鲁棒性和 ARO 基准性能上表现更优。
 
-## 致谢
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202509211742777.png)
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202509211742566.png)
 
-感谢 Jason Ramapuram、Vaishaal Shankar、Russ Webb 提供的宝贵反馈与讨论；感谢 Albin Madappally Jose 在数据集创建与处理中的支持；最后，感谢苹果公司机器学习研究团队全体成员的有益讨论与基础设施支持。
-
-（注：参考文献部分因篇幅限制，保留原文格式，其中 “Advances in Neural Information Processing Systems” 译为 “神经信息处理系统进展”，“Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition” 译为 “IEEE/CVF 计算机视觉与模式识别会议论文集”，其余期刊 / 会议名称均采用领域通用译法。）
