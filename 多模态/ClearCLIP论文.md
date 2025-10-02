@@ -20,11 +20,11 @@
 
 为回答 “噪声来源” 这一问题，我们对 CLIP 的架构进行了深入研究，意外发现：由 ResNet 提出且广泛应用于 Transformer 架构的**残差连接**，对 CLIP 适配开放词汇语义分割任务具有显著影响。为阐明这一点，我们将 CLIP 视觉编码器的输出分解为两个部分 —— 残差连接（$X_{res}$）与注意力输出（$X_{attn}$），具体通过在视觉编码器最后一层直接分离二者实现。如图 1（上方三幅图像）所示，基于残差连接生成的分割结果存在明显噪声，而基于注意力输出特征生成的分割结果则更清晰，且定位性能更优。据此，我们提出：==分割图中的噪声主要源于残差连接==。
 
-[^1]为探究 “噪声如何产生”，我们首先对比了 CLIP 中残差连接与注意力输出的统计特性。值得注意的是，二者的==归一化熵存在显著差异==：CLIP 中残差连接的熵沿网络层逐渐趋近于 0，而注意力输出的熵始终保持在 1 左右。这一发现与我们的观察一致 —— 残差连接在各层中均存在更大的最大值。因此，CLIP 的最终输出（即残差连接与注意力输出之和）表现出与残差连接相似的特性。我们的发现也与文献 [12] 的结论一致，该文献指出大规模预训练模型的最终特征图中存在许多高范数伪影。进一步观察残差连接图可发现，这些峰值集中在少数几个通道中。换言之，残差连接图中的大多数特征向量共享相同的峰值维度（即 latent 空间中的相似方向）。这种特性使得通过余弦相似度区分不同空间特征向量变得困难，从而导致噪声产生。相反，注意力分支中的自注意力机制经过学习可分离不同的空间特征，从而缓解此类问题。
+为探究 “噪声如何产生”，我们首先对比了 CLIP 中残差连接与注意力输出的统计特性。值得注意的是，二者的==归一化熵存在显著差异==：==CLIP 中残差连接的熵沿网络层逐渐趋近于 0，而注意力输出的熵始终保持在 1 左右==[^1]。这一发现与我们的观察一致 —— 残差连接在各层中均存在更大的最大值。因此，CLIP 的最终输出（即残差连接与注意力输出之和）表现出与残差连接相似的特性。我们的发现也与文献 [12] 的结论一致，该文献指出大规模预训练模型的最终特征图中存在许多==高范数伪影==。进一步观察残差连接图可发现，这些峰值集中在少数几个通道中。换言之，==残差连接图中的大多数特征向量共享相同的峰值维度（即 latent 空间中的相似方向）==[^2]。这种特性使得通过余弦相似度区分不同空间特征向量变得困难，从而导致噪声产生。相反，注意力分支中的自注意力机制经过学习可分离不同的空间特征，从而缓解此类问题。
 
-随后，我们研究了同样采用 Transformer 架构但通过自监督方式预训练的 DINO [5] 模型，发现其两种特征图（残差连接与注意力输出）的熵并无上述差异。因此，我们提出：CLIP 中的高层监督会强调残差 latent 空间中的全局特征方向，导致局部特征向量的区分度降低，进而使残差特征中产生噪声。
+随后，我们研究了同样采用 Transformer 架构但通过自监督方式预训练的 DINO [5] 模型，发现其两种特征图（残差连接与注意力输出）的熵并无上述差异。因此，我们提出：==CLIP 中的高层监督会强调残差 latent 空间中的全局特征方向，导致局部特征向量的区分度降低，进而使残差特征中产生噪声==。
 
-基于上述发现，我们重新审视了近期方法 [26,40,56]，发现这些方法的性能提升部分源于 “增强注意力输出时降低了残差连接的影响”。由此可推导出：CLIP 适配密集视觉 - 语言推理任务的两个关键因素为 ——**降低残差连接的影响**与**通过自 - 自注意力重组空间信息**。基于这些见解，我们提出 ClearCLIP 方法，对 CLIP 的最后一层进行三项简单修改：移除残差连接、采用自 - 自注意力、丢弃前馈网络（FFN）。这些修改旨在增强注意力输出，从而为开放词汇语义分割任务提供更清晰的表征（如图 1 所示）。在 8 个基准数据集上的大量实验验证了 ClearCLIP 的有效性。
+基于上述发现，我们重新审视了近期方法 [26,40,56]，发现这些方法的性能提升部分源于 “增强注意力输出时降低了残差连接的影响”。由此可推导出：CLIP 适配密集视觉 - 语言推理任务的两个关键因素为 ——**降低残差连接的影响**与**通过自 - 自注意力重组空间信息**。基于这些见解，我们提出 ClearCLIP 方法，对 CLIP 的==最后一层进行三项简单修改：移除残差连接、采用自 - 自注意力、丢弃前馈网络（FFN）==。这些修改旨在增强注意力输出，从而为开放词汇语义分割任务提供更清晰的表征（如图 1 所示）。在 8 个基准数据集上的大量实验验证了 ClearCLIP 的有效性。
 
 ## 2 相关工作
 
@@ -53,38 +53,38 @@
 
 #### 3.1.1 ViT 架构
 
-基于 ViT（Vision Transformer）的 CLIP 模型 [35] 由一系列残差注意力模块组成。每个模块的输入为视觉令牌集合\(X=[x_{cls}, x_1, ..., x_{h \times w}]^T\)，其中\(x_{cls}\)表示全局类别令牌，\(\{x_i | i=1,2,...,h \times w\}\)表示局部 patch 令牌。为简洁起见，我们省略层编号，将残差注意力模块表示为：
+基于 ViT（Vision Transformer）的 CLIP 模型 [35] 由一系列残差注意力模块组成。每个模块的输入为视觉令牌集合 $X=[x_{cls}, x_1, ..., x_{h \times w}]^T$ ，其中 $x_{cls}$ 表示全局类别令牌，$\{x_i | i=1,2,...,h \times w\}$ 表示局部 patch 令牌。为简洁起见，我们省略层编号，将残差注意力模块表示为：
 
-\(q=Proj_q(LN(X)),\ k=Proj_k(LN(X)),\ v=Proj_v(LN(X)) \quad (1)\)
+$$q=Proj_q(LN(X)),\ k=Proj_k(LN(X)),\ v=Proj_v(LN(X)) \quad (1)$$
 
-\(X_{sum}=X_{res}+X_{attn}=X+Proj(Attn_{qk} \cdot v) \quad (2)\)
+$$X_{sum}=X_{res}+X_{attn}=X+Proj(Attn_{qk} \cdot v) \quad (2)$$
 
-\(X=X_{sum}+FFN(LN(X_{sum})) \quad (3)\)
+$$X=X_{sum}+FFN(LN(X_{sum})) \quad (3)$$
 
-其中，LN表示层归一化（Layer Normalization），Proj表示投影层，FFN表示前馈网络；\(X_{res}\)和\(X_{attn}\)分别表示残差连接和注意力输出；\(Attn_{qk}=softmax\left(\frac{qk^T}{\sqrt{d_k}}\right)\)表示查询 - 键（q-k）注意力，\(d_k\)为k的维度。
+其中，LN表示层归一化（Layer Normalization），Proj表示投影层，FFN表示前馈网络；$X_{res}$ 和 $X_{attn}$ 分别表示残差连接和注意力输出；$Attn_{qk}=softmax\left(\frac{qk^T}{\sqrt{d_k}}\right)$ 表示查询 - 键（q-k）注意力，$d_k$ 为k的维度。
 
 #### 3.1.2 对比预训练
 
-CLIP 采用基于 Transformer 的视觉编码器v和文本编码器T，分别为每个图文对生成视觉表征\(X_{cls}^{visual}\)和文本表征\(X^{text}\)。CLIP 的预训练基于对比损失：给定一批图文对，模型需最大化视觉表征\(X_{cls}^{visual}\)与其对应文本表征\(X^{text}\)的余弦相似度，同时最小化不同图文对间表征的相似度。
+CLIP 采用基于 Transformer 的视觉编码器v和文本编码器T，分别为每个图文对生成视觉表征 $X_{cls}^{visual}$ 和文本表征 $X^{text}$ 。CLIP 的预训练基于对比损失：给定一批图文对，模型需最大化视觉表征 $X_{cls}^{visual}$ 与其对应文本表征 $X^{text}$ 的余弦相似度，同时最小化不同图文对间表征的相似度。
 
 #### 3.1.3 开放词汇密集推理
 
-为将 CLIP 适配于开放词汇语义分割，基准方法采用密集 patch 级分类策略：对于一幅图像，首先通过视觉编码器v提取其视觉表征\(X^{visual}=[x_{cls}^{visual}, X_{dense}^{visual}]^T\)，其中\(X_{dense}^{visual} \in \mathbb{R}^{hw \times d}\)表示d维 latent 空间中的局部 patch 表征；对于文本特征，首先将含C个类别的目标标签嵌入到提示模板 “a photo of a {label}.” 中生成文本描述，再将这些文本描述输入 CLIP 的文本编码器，生成C个类别的文本表征\(X^{text} \in \mathbb{R}^{C \times d}\)。最终分割图\(M \in \mathbb{R}^{hw \times 1}\)的计算方式如下：
+为将 CLIP 适配于开放词汇语义分割，基准方法采用密集 patch 级分类策略：对于一幅图像，首先通过视觉编码器v提取其视觉表征 $X^{visual}=[x_{cls}^{visual}, X_{dense}^{visual}]^T$ ，其中 $X_{dense}^{visual} \in \mathbb{R}^{hw \times d}$ 表示d维 latent 空间中的局部 patch 表征；对于文本特征，首先将含C个类别的目标标签嵌入到提示模板 “a photo of a {label}.” 中生成文本描述，再将这些文本描述输入 CLIP 的文本编码器，生成C个类别的文本表征 $X^{text} \in \mathbb{R}^{C \times d}$ 。最终分割图 $M \in \mathbb{R}^{hw \times 1}$ 的计算方式如下：
 
-\(\mathcal{M}=\underset{c}{arg\ max}\ cos\left(X_{dense}^{visual}, X^{text}\right) \quad (4)\)
+$$\mathcal{M}=\underset{c}{arg\ max}\ cos\left(X_{dense}^{visual}, X^{text}\right) \quad (4)$$
 
 ### 3.2 研究动机
 
-公式（4）所示的基准方法往往无法取得理想结果 [56]，这可能是因为 CLIP 通过图文间的图像级对比损失训练，导致局部图像区域与文本表征的对齐效果较差 [41]。已有研究 [3,26,40,56] 尝试通过最少修改 CLIP（不重新训练）解决这一问题，其核心思路是将最后一个自注意力层中的原始\(Attn_{qk}\)修改为单位注意力 [56] 或自 - 自注意力 [3,26,40]（即\(Attn_{qq}\)、\(Attn_{kk}\)或\(Attn_{vv}\)），以重组空间信息。如图 2 所示，这些方法确实改进了基准性能：在采用 ViT-B/16 架构的 CLIP（CLIP-B/16）上，COCOStuff 数据集的 mIoU 从 4.4 提升至近 20.0。然而，仍存在以下关键挑战：
+公式（4）所示的基准方法往往无法取得理想结果 [56]，这可能是因为 CLIP 通过图文间的图像级对比损失训练，导致局部图像区域与文本表征的对齐效果较差 [41]。已有研究 [3,26,40,56] 尝试通过最少修改 CLIP（不重新训练）解决这一问题，其核心思路是将最后一个自注意力层中的原始 $Attn_{qk}$ 修改为单位注意力 [56] 或自 - 自注意力 [3,26,40]（即 $Attn_{qq}$、$Attn_{kk}$ 或 $Attn_{vv}$ ），以重组空间信息。如图 2 所示，这些方法确实改进了基准性能：在采用 ViT-B/16 架构的 CLIP（CLIP-B/16）上，COCOStuff 数据集的 mIoU 从 4.4 提升至近 20.0。然而，仍存在以下关键挑战：
 
-1. 现有方法生成的分割结果仍非最优，且存在噪声；
-2. 当使用更大模型（如 ViT-L/14）时，这些方法无法取得合理结果。例如，图 2 中 ViT-L/14 架构下，\(Attn_{qq}\)和\(Attn_{kk}\)的性能甚至低于原始\(Attn_{qk}\)，且分割图噪声更多。
+1. 现有方法生成的分割结果仍非最优，且==存在噪声==；
+2. 当使用==更大模型==（如 ViT-L/14）时，这些方法无法取得合理结果。例如，图 2 中 ViT-L/14 架构下，$Attn_{qq}$ 和 $Attn_{kk}$ 的性能甚至低于原始 $Attn_{qk}$ ，且分割图==噪声更多==。
 
 这种反直觉现象表明，现有工作在将 CLIP 适配于密集预测任务时，可能忽略了某些重要问题。本文旨在探究：分割结果中的噪声究竟源于何处？又如何显现？
 
-![](data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%27400%27%20height=%27256%27/%3e)![image](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1NiIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==)
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202510021432684.png)
 
-图 2：CLIP-B/16（左图）与 CLIP-L/14（右图）中不同注意力机制的范数与 mIoU 对比。\(X_{attn}\)的范数曲线与 mIoU 曲线呈正相关；CLIP-L/14 中\(X_{res}\)的范数更大，阻碍了通过修改注意力机制提升性能的效果。
+图 2：CLIP-B/16（左图）与 CLIP-L/14（右图）中不同注意力机制的范数与 mIoU 对比。$X_{attn}$ 的范数曲线与 mIoU 曲线呈正相关；CLIP-L/14 中 $X_{res}$ 的范数更大，阻碍了通过修改注意力机制提升性能的效果。
 
 ### 3.3 ClearCLIP 方法
 
@@ -92,54 +92,48 @@ CLIP 采用基于 Transformer 的视觉编码器v和文本编码器T，分别为
 
 #### 3.3.1 残差连接的影响
 
-我们首先在 COCOStuff 数据集上，对比了 CLIP-B/16 和 CLIP-L/14 模型最后一个模块中 “残差连接（\(X_{res}\)）” 与 “不同注意力输出（\(X_{attn}\)）” 的弗罗贝尼乌斯范数。如图 2 所示，两幅子图存在共性与差异：
+我们首先在 COCOStuff 数据集上，对比了 CLIP-B/16 和 CLIP-L/14 模型最后一个模块中 “残差连接（$X_{res}$）” 与 “不同注意力输出（$X_{attn}$）” 的弗罗贝尼乌斯范数。如图 2 所示，两幅子图存在共性与差异：
 
-- **共性**：mIoU 曲线与\(X_{attn}\)的范数曲线呈一定正相关；
-- **差异**：1）CLIP-B/16 中\(X_{res}\)的范数远小于 CLIP-L/14；2）CLIP-B/16 中修改注意力机制能持续优于\(q-k\)基准，而 CLIP-L/14 中则不能。
+- **共性**：mIoU 曲线与 $X_{attn}$ 的范数曲线呈一定正相关；
+- **差异**：1）CLIP-B/16 中 $X_{res}$ 的范数远小于 CLIP-L/14；2）CLIP-B/16 中修改注意力机制能持续优于 $q-k$ 基准，而 CLIP-L/14 中则不能。
 
-据此，我们提出假设：仅当\(X_{res}\)的影响（或范数）较小时，修改注意力机制才有效。换言之，\(X_{res}\)严重损害了 CLIP 系列模型在密集推理任务中的性能。
+据此，我们提出假设：==仅当 $X_{res}$ 的影响（或范数）较小时，修改注意力机制才有效。换言之，$X_{res}$ 严重损害了 CLIP 系列模型在密集推理任务中的性能。==
 
-为验证这一假设，我们基于 CLIP-B/16，分别使用\(X_{sum}\)、\(X_{res}\)和\(X_{attn}\)进行开放词汇语义分割实验，结果如图 3 所示。令人惊讶的是：\(X_{res}\)的 mIoU 接近 0，表明残差连接对图像分割几乎无帮助；相反，仅使用\(X_{attn}\)的 mIoU 远高于\(X_{sum}\)。图 3 的可视化结果进一步表明，CLIP 的含噪声分割图可分解为两部分 ——\(X_{res}\)对应的杂乱图，以及\(X_{attn}\)对应的更清晰图。基于这些实验结果，我们可初步得出结论：分割图中的噪声主要源于残差连接。
+为验证这一假设，我们基于 CLIP-B/16，分别使用 $X_{sum}$、$X_{res}$ 和 $X_{attn}$ 进行开放词汇语义分割实验，结果如图 3 所示。令人惊讶的是：==$X_{res}$ 的 mIoU 接近 0，表明残差连接对图像分割几乎无帮助；相反，仅使用 $X_{attn}$ 的 mIoU 远高于 $X_{sum}$== 。图 3 的可视化结果进一步表明，CLIP 的含噪声分割图可分解为两部分 —— $X_{res}$ 对应的杂乱图，以及 $X_{attn}$ 对应的更清晰图。基于这些实验结果，我们可初步得出结论：==分割图中的噪声主要源于残差连接==。
 
-![](data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%27400%27%20height=%27256%27/%3e)![image](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1NiIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==)
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202510021441871.png)
 
 图 3：CLIP-B/16 模型在 COCOStuff 数据集上使用不同特征图的开放词汇语义分割结果。左图为可视化示例，右图为定量结果。
 
-|特征|mIoU|
-|---|---|
-|\(X_{sum}\)|4.4|
-|\(X_{res}\)|0.01|
-|\(X_{attn}\)|11.6|
-
 为更深入理解噪声在语义分割任务中的产生机制，我们对比分析了 CLIP-B/16 与 DINO-B/16 的特征统计特性（DINO 在学习可迁移、语义一致的密集特征方面表现出较强能力 [16,23,31]）。首先，我们计算了各层的归一化熵 [15]，公式如下：
 
-\(H(X^L)=-\frac{1}{\log(hw \times d)} \sum_{i,j} p(X_{i,j}^L) \log p(X_{i,j}^L),\ p(X_{i,j}^L)=\frac{e^{X_{i,j}^L}}{\sum_{m,n} e^{X_{m,n}^L}} \quad (5)\)
+$$H(X^L)=-\frac{1}{\log(hw \times d)} \sum_{i,j} p(X_{i,j}^L) \log p(X_{i,j}^L),\ p(X_{i,j}^L)=\frac{e^{X_{i,j}^L}}{\sum_{m,n} e^{X_{m,n}^L}} \quad (5)$$
 
-其中，\(X^L\)表示 ViT 网络第L层的特征图（即\(X_{sum}\)、\(X_{res}\)和\(X_{attn}\)）。如图 4 (a) 所示，DINO-B/16 中各层\(X^L\)的熵变化不大；而 CLIP-B/16 中，仅\(X_{attn}\)的熵在各层保持稳定，\(X_{sum}\)和\(X_{res}\)的熵则急剧下降至接近 0。根据公式（5），低熵意味着\(X^L\)中存在少量峰值。因此，我们在图 4 (b) 中分析了\(max_{i,j} X_{i,j}^L\)的平均最大值：DINO-B/16 中各类特征图的最大值在各层保持稳定（通常低于 10），因此各层熵值一致；而 CLIP-B/16 中，\(X_{res}\)和\(X_{sum}\)的最大值随层数增加而显著上升，在最后一层达到的峰值约为早期层的 90 倍，导致\(X_{res}\)和\(X_{sum}\)的熵从 ViT 中间层开始急剧下降至接近 0。
+其中，$X^L$ 表示 ViT 网络第L层的特征图（即 $X_{sum}$ 、$X_{res}$ 和 $X_{attn}$ ）。如图 4 (a) 所示，DINO-B/16 中各层 $X^L$ 的熵变化不大；而 CLIP-B/16 中，仅 $X_{attn}$ 的熵在各层保持稳定，$X_{sum}$ 和 $X_{res}$ 的熵则急剧下降至接近 0。根据公式（5），低熵意味着 $X^L$ 中存在少量峰值。因此，我们在图 4 (b) 中分析了 $max_{i,j} X_{i,j}^L$ 的平均最大值：DINO-B/16 中各类特征图的最大值在各层保持稳定（通常低于 10），因此各层熵值一致；而 ==CLIP-B/16 中，$X_{res}$ 和 $X_{sum}$ 的最大值随层数增加而显著上升，在最后一层达到的峰值约为早期层的 90 倍，导致 $X_{res}$ 和 $X_{sum}$ 的熵从 ViT 中间层开始急剧下降至接近 0==。
 
-通过对多个特征图的可视化（见补充材料），我们发现这些峰值集中在少数通道中。为验证这一观察，我们对\(X_{res}\)中各通道的平均归一化均值按升序排序后计算其平均值，并在图 4 (c) 中可视化：结果显示\(X_{res}\)中的少数通道主导了峰值，与特征图可视化结果一致。
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202510021447999.png)
 
-直观而言，这些通道级统计特性反映了\(X^L\)的全局特征（因其与局部模式无关）。若\(X_{res}\)和\(X_{sum}\)的熵低且主要受少数通道影响，则局部信息很可能被破坏。如公式（4）所示，若两个特征向量共享相同的主导通道，则难以通过余弦相似度区分它们。这种特性对优先考虑全局信息的图像识别任务无害，但会导致 CLIP 在强调局部信息的密集预测任务中性能不佳。理论上，这种现象在层数更深的大型视觉 Transformer 模型中会更显著 —— 这也解释了为何现有自注意力修改方法在 CLIP-L/14 模型上无法取得理想结果。
+通过对多个特征图的可视化（见补充材料），我们发现这些峰值集中在少数通道中。为验证这一观察，我们对 $X_{res}$ 中各通道的平均归一化均值按升序排序后计算其平均值，并在图 4 (c) 中可视化：结果显示 ==$X_{res}$ 中的少数通道主导了峰值==，与特征图可视化结果一致。
 
-为进一步验证\(X_{res}\)对 CLIP 性能的影响，我们引入缩放因子\(\alpha^3\)，将\(X_{sum}\)表示为\(X_{sum}=X_{res}+\alpha X_{attn}\)，以控制\(X_{attn}\)相对于\(X_{res}\)的影响。图 6 的实验结果表明，更大的\(\alpha\)能显著提升性能 —— 这清晰地证明了\(X_{res}\)对性能的负面影响。最终，我们提出：为在密集视觉 - 语言推理任务中取得最佳性能，应直接丢弃残差连接。
+直观而言，这些通道级统计特性反映了 $X^L$ 的全局特征（因其与局部模式无关）。==若 $X_{res}$ 和 $X_{sum}$ 的熵低且主要受少数通道影响，则局部信息很可能被破坏==。如公式（4）所示，若两个特征向量共享相同的主导通道，则难以通过余弦相似度区分它们。这种特性对优先考虑全局信息的图像识别任务无害，但会导致 CLIP 在强调局部信息的密集预测任务中性能不佳。理论上，==这种现象在层数更深的大型视觉 Transformer 模型中会更显著 —— 这也解释了为何现有自注意力修改方法在 CLIP-L/14 模型上无法取得理想结果==。
 
-> 注 3：SCLIP [40] 可大致视为\(\alpha=2\)的特例，即\(Proj((Attn_{qq}+Attn_{kk}) \cdot v) \approx Proj(2 Attn_{qk} \cdot v) \approx 2 X_{attn}\)。
+为进一步验证 $X_{res}$ 对 CLIP 性能的影响，我们引入缩放因子 $\alpha$ [^3]，将 $X_{sum}$ 表示为 $X_{sum}=X_{res}+\alpha X_{attn}$ ，以控制 $X_{attn}$ 相对于 $X_{res}$ 的影响。图 6 的实验结果表明，更大的 $\alpha$ 能显著提升性能 —— 这清晰地证明了 $X_{res}$ 对性能的负面影响。最终，我们提出：==为在密集视觉 - 语言推理任务中取得最佳性能，应直接丢弃残差连接。==
 
 #### 3.3.2 前馈网络（FFN）的影响
 
 Transformer 架构中的前馈网络（FFN）在建模数据内的关系与模式方面发挥重要作用。然而，近期研究 [14] 表明，FFN 在推理过程中对图像表征的影响微乎其微；CLIPSurgery [26] 发现，最后一个注意力模块的 FFN 特征与最终分类特征的余弦角显著更大，因此提出在密集预测任务中丢弃 FFN。
 
-本文实验发现：对原始 CLIP 模型而言，单独移除 FFN 对开放词汇语义分割任务的影响极小；但如图 5 所示，当与 “移除残差连接” 结合时，丢弃 FFN 能进一步提升性能（尤其在模型规模较大时）。其原因在于：移除残差连接会显著改变 FFN 的输入，进而影响其输出；因此，移除 FFN 输出可能会减轻其对性能的负面影响。
+本文实验发现：==对原始 CLIP 模型而言，单独移除 FFN 对开放词汇语义分割任务的影响极小==；但如图 5 所示，当与 “移除残差连接” 结合时，丢弃 FFN 能进一步提升性能（尤其在模型规模较大时）。其原因在于：==移除残差连接会显著改变 FFN 的输入，进而影响其输出；因此，移除 FFN 输出可能会减轻其对性能的负面影响==。
+
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202510021503430.png)
 
 #### 3.3.3 ClearCLIP 的最终设计
 
-基于上述分析，我们提出一种简洁的 CLIP 适配方案，用于开放词汇语义分割：直接使用最后一个自注意力层的注意力输出作为视觉表征，公式如下：
+基于上述分析，我们提出一种简洁的 CLIP 适配方案，用于开放词汇语义分割：==直接使用最后一个自注意力层的注意力输出作为视觉表征==[^4]，公式如下：
 
-\(X^{visual}=X_{attn}=Proj(Attn_{(\cdot)(\cdot)} \cdot v) \quad (6)\)
+$$X^{visual}=X_{attn}=Proj(Attn_{(\cdot)(\cdot)} \cdot v) \quad (6)$$
 
-其中，\(Attn_{(\cdot)(\cdot)}\)表示注意力机制中的查询 - 键组合。受已有工作启发，我们尝试了多种组合，最终发现\(Attn_{qq}\)在大多数情况下性能更优，因此将其设为默认选择。
-
-> 注 4：为简洁起见，此处省略了最终投影层。
+其中，$Attn_{(\cdot)(\cdot)}$ 表示注意力机制中的查询 - 键组合。受已有工作启发，我们尝试了多种组合，最终发现 $Attn_{qq}$ 在大多数情况下性能更优，因此将其设为默认选择。
 
 ## 4 实验
 
@@ -183,6 +177,8 @@ Transformer 架构中的前馈网络（FFN）在建模数据内的关系与模�
 |q-q|✗|✓|77.6|31.8|21.0|23.4|14.7|33.7|
 |q-q|✗|✗|80.9|35.9|23.9|30.0|16.7|37.5|
 
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202510021510420.png)
+
 #### 4.2.2 不同架构的适配性
 
 ClearCLIP 的设计简洁，可无缝适配不同架构。我们在 CLIP [35] 和 OpenCLIP [8] 上分别采用 ViT-B/16 和 ViT-L/14 架构进行实验，5 个数据集的平均 mIoU 结果如图 5 所示。关键发现：
@@ -194,7 +190,7 @@ ClearCLIP 的设计简洁，可无缝适配不同架构。我们在 CLIP [35] �
 
 #### 4.2.3 放大注意力输出范数的影响
 
-为进一步探索开放词汇语义分割任务中 “残差连接” 与 “注意力输出” 的关系，我们设置\(\alpha=\{0.1,1,2,10,100\}\)，将\(X_{attn}\)的 F - 范数显式放大至\(\alpha^2\)倍。如图 6 所示，结果呈现明确趋势：随着\(\alpha\)增大，所有注意力类型的模型性能均显著提升；而当\(\alpha\)从 1 降至 0.5 时，性能急剧下降。这些发现表明：增大注意力输出的范数对减轻残差连接的负面影响至关重要，最终可显著提升性能 —— 这也验证了 ClearCLIP “移除残差连接” 这一设计的简洁有效性。此外，这些见解也解释了 SCLIP [40]（采用 q-q+kk 注意力）性能优异的原因：该注意力机制大致将原始注意力输出翻倍。
+为进一步探索开放词汇语义分割任务中 “残差连接” 与 “注意力输出” 的关系，我们设置 $\alpha=\{0.1,1,2,10,100\}$ ，将 $X_{attn}$ 的 F - 范数显式放大至 $\alpha^2$ 倍。如图 6 所示，结果呈现明确趋势：随着 $\alpha$ 增大，所有注意力类型的模型性能均显著提升；而当 $\alpha$ 从 1 降至 0.5 时，性能急剧下降。这些发现表明：增大注意力输出的范数对减轻残差连接的负面影响至关重要，最终可显著提升性能 —— 这也验证了 ClearCLIP “移除残差连接” 这一设计的简洁有效性。此外，这些见解也解释了 SCLIP [40]（采用 q-q+kk 注意力）性能优异的原因：该注意力机制大致将原始注意力输出翻倍。
 
 ### 4.3 与现有最优方法的对比
 
@@ -260,7 +256,7 @@ ClearCLIP 的设计简洁，可无缝适配不同架构。我们在 CLIP [35] �
 
 这些观察验证了我们的核心思路 —— 通过分解 CLIP 的表征，可有效提升开放词汇语义分割性能。
 
-![](data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%27400%27%20height=%27256%27/%3e)![image](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1NiIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==)
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202510021510354.png)
 
 图 7：开放词汇分割方法的定性对比。
 
@@ -268,21 +264,13 @@ ClearCLIP 的设计简洁，可无缝适配不同架构。我们在 CLIP [35] �
 
 本文探究了 CLIP 系列模型在开放词汇语义分割任务中产生含噪声分割结果的根源与机制。我们重新审视 CLIP 的架构，对比分析了残差连接与注意力输出的特征统计特性；通过研究不同规模 CLIP 骨干网络的范数差异，发现**残差连接是分割噪声的主要来源**。此外，通过对比 CLIP 与 DINO，我们提出：残差特征缺乏局部信息的原因在于 “高层监督优先关注全局方向”。最后，我们提出 ClearCLIP 方法，通过三项简单修改（移除残差连接、采用自 - 自注意力、丢弃 FFN）显著提升了 CLIP 的语义分割性能。实验表明，ClearCLIP 在 CLIP 系列模型中具有优异的性能与泛化性。
 
-## 致谢
-
-本研究得到新加坡研究、创新与企业 2020 计划（RIE2020）产业协同基金 —— 产业合作项目（IAF-ICP）的资助，同时获得产业合作伙伴的资金与实物支持。
-
-## 参考文献（节选，完整参考文献见原文）
-
-[1] Alayrac, J.B., et al.: Self-supervised multimodal versatile networks. Advances in Neural Information Processing Systems 33, 25–37 (2020)[2] Antol, S., et al.: Vqa: Visual question answering. In: Proceedings of the IEEE International Conference on Computer Vision. pp. 2425–2433 (2015)[3] Bousselham, W., et al.: Grounding everything: Emerging localization properties in vision-language transformers. arXiv preprint arXiv:2312.00878 (2023)[4] Caesar, H., et al.: Coco-stuff: Thing and stuff classes in context. In: Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. pp. 1209–1218 (2018)[5] Caron, M., et al.: Emerging properties in self-supervised vision transformers. In: Proceedings of the IEEE/CVF International Conference on Computer Vision. pp. 9650–9660 (2021)[6] Cha, J., et al.: Learning to generate text-grounded mask for open-world semantic segmentation from only image-text pairs. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. pp. 11165–11174 (2023)[7] Chen, X., et al.: Pali: A jointly-scaled multilingual language-image model. arXiv preprint arXiv:2209.06794 (2022)[8] Cherti, M., et al.: Reproducible scaling laws for contrastive language-image learning. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. pp. 2818–2829 (2023)[9] Cho, J., et al.: Unifying vision-and-language tasks via text generation. In: International Conference on Machine Learning. pp. 1931–1942. PMLR (2021)[10] Contributors, M.: Mmsegmentation: Openmmlab semantic segmentation toolbox and benchmark (2020)[11] Cordts, M., et al.: The cityscapes dataset for semantic urban scene understanding. In: Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. pp. 3213–3223 (2016)[12] Darcet, T., et al.: Vision transformers need registers. arXiv preprint arXiv:2309.16588 (2023)[13] Everingham, M., et al.: The pascal visual object classes challenge 2012 (voc2012) development kit. Pattern Anal. Stat. Model. Comput. Learn., Tech. Rep 2007(1-45), 5 (2012)[14] Gandelsman, Y., et al.: Interpreting clip’s image representation via text-based decomposition. arXiv preprint arXiv:2310.05916 (2023)[15] Gray, R.M.: Entropy and information theory. Springer Science & Business Media (2011)[35] Radford, A., et al.: Learning transferable visual models from natural language supervision. In: International Conference on Machine Learning. pp. 8748–8763. PMLR (2021)[56] Zhou, C., et al.: Extract free dense labels from clip. In: European Conference on Computer Vision. pp. 696–712. Springer (2022)
-
 ## 附录（节选）
 
 ### A 不同骨干网络与数据集的消融实验
 
 图 8 展示了不同 CLIP 模型在各数据集上的消融实验结果。可见，“移除残差连接与 FFN” 的方法在所有数据集上均显著提升了 CLIP 的开放词汇语义分割能力，且在残差连接范数更大的 ViT-L/14 架构上提升更为明显 —— 这些结果充分验证了本文方法的有效性。
 
-![](data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%27400%27%20height=%27256%27/%3e)![image](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1NiIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==)
+![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202510021512612.png)
 
 图 8：不同架构与注意力机制下各数据集的消融实验结果。⃝：原始 CLIP；△：移除残差连接的 CLIP；✩：移除残差连接与 FFN 的 CLIP。
 
@@ -319,6 +307,8 @@ ClearCLIP 的修改仅需 2-3 行代码，可作为 “免费改进” 适配于
 ### E 额外定性示例
 
 图 10 和图 11 分别展示了 COCOStuff、ADE20K 和 Pascal Context59 数据集上的额外定性对比结果。与正文发现一致，ClearCLIP 的分割结果噪声显著少于其他方法，进一步证明了其优越性。
+
+## 脚注
 
 [^1]: 要理解这段话，我们需要先拆解**核心概念**（归一化熵、残差连接、注意力输出），再结合 CLIP 的训练目标和特征特性，一步步解释 “熵差异” 如何导致噪声产生。
 	
@@ -367,3 +357,67 @@ ClearCLIP 的修改仅需 2-3 行代码，可作为 “免费改进” 适配于
 	### 总结：一句话讲清逻辑链
 	
 	CLIP 为了对齐全局图文特征，让残差连接的特征变得 “极端不均（熵≈0）”，而注意力输出的 “均匀特征（熵≈1）” 被残差的峰值掩盖，最终输出的特征无法区分局部细节，导致语义分割时产生噪声。
+
+[^2]: 要理解这句话，我们需要先拆解**核心术语**（特征向量、峰值维度、latent 空间），再结合 CLIP 残差连接的特性，用 “具象类比 + 技术逻辑” 的方式逐步解释，最后关联到 “为什么这会导致分割噪声”。
+	
+	### 第一步：先明确 3 个关键概念
+	
+	在 CLIP 的视觉编码器（比如 ViT 架构）中，“残差连接图” 本质是**残差连接（X_res）对应的特征图**，我们需要先搞懂这个特征图里的核心组成：
+	
+	#### 1. 特征向量（Feature Vector）：每个 “局部 patch” 的 “身份信息卡”
+	
+	CLIP 会把输入图像分成多个小 patch（比如 ViT-B/16 会把图像分成 14×14=196 个 patch），**每个 patch 会被编码成一个高维向量**，这就是 “特征向量”。
+	
+	- 维度举例：比如 ViT-B/16 的特征向量是 768 维（可以理解为 “身份信息卡” 有 768 个字段）；
+	- 每个维度的含义：每个维度对应一个 “抽象视觉属性”，比如第 100 维可能代表 “猫的轮廓”，第 200 维代表 “红色”，第 300 维代表 “毛发纹理”—— 这些属性是模型训练中自动学到的，不需要人工定义。
+	
+	#### 2. 峰值维度（Peak Dimension）：特征向量里 “最突出的属性”
+	
+	每个特征向量的 768 个维度中，**数值最大的那个维度**就是 “峰值维度”。
+	
+	- 类比：比如一个 “猫的头部 patch” 的特征向量中，第 100 维（“猫的轮廓”）的数值是 5.2，其他维度（比如 “红色”“毛发纹理”）的数值都在 0.1~0.5 之间 —— 那么第 100 维就是这个 patch 的 “峰值维度”，意味着这个 patch 最核心的属性是 “猫的轮廓”。
+	
+	#### 3. Latent 空间：高维 “特征属性宇宙”
+	
+	“Latent 空间”（潜在空间）就是所有特征向量所在的高维空间 —— 比如 768 维的 Latent 空间，每个维度对应一个视觉属性，每个特征向量就是这个空间里的一个 “箭头”（向量）。
+	
+	- “向量方向” 的含义：一个特征向量的方向，由它所有维度的数值共同决定。比如：
+	    - 若向量 A 的第 100 维数值最大（峰值维度），其他维度小，那么向量 A 会 “指向第 100 维的方向”；
+	    - 若向量 B 的第 100 维也是峰值维度，其他维度小，那么向量 B 也会 “指向第 100 维的方向”—— 此时 A 和 B 的 “方向相似”。
+	
+	### 第二步：串联句子含义：为什么残差连接的特征向量 “共享峰值维度 + 方向相似”？
+	
+	结合 CLIP 的训练目标和残差连接的作用，我们可以把这句话拆解成两个层层递进的结论：
+	
+	#### 1. 残差连接的大多数特征向量 “共享相同的峰值维度”
+	
+	- 含义：不管是图像中 “猫的头部 patch”“猫的身体 patch”，还是 “猫的爪子 patch”，它们的特征向量（来自残差连接）的 “峰值维度都是同一个”（比如都是第 100 维 “猫的轮廓”）。
+	- 原因：CLIP 的核心训练目标是 “全局图文对齐”—— 让**整个图像的特征与文本特征匹配**（比如 “a photo of a cat” 的文本，要和 “整个猫的图像” 的特征对齐）。而残差连接的作用是 “保留上一层的原始全局特征”，所以它会优先强化 “全局主导属性”（比如 “猫的整体轮廓”），而抑制局部细节属性（比如 “猫的耳朵纹理”“猫的爪子颜色”）。
+	    
+	    结果就是：所有属于 “猫” 的 patch，它们的残差特征向量都会把 “猫的全局轮廓”（第 100 维）作为峰值维度，其他局部属性的维度数值都被压制 —— 最终 “共享相同的峰值维度”。
+	
+	#### 2. 共享峰值维度 → Latent 空间中 “方向相似”
+	
+	- 数学逻辑：在高维空间中，向量的方向由 “各维度数值的比例” 决定。如果两个特征向量的 “峰值维度相同”，且其他维度的数值都远小于峰值维度，那么这两个向量会 “主要沿着峰值维度的方向延伸”，导致它们的夹角很小（cosine 相似度很高），即 “方向相似”。
+	- 类比：假设 Latent 空间是一个 3 维空间（简化理解），其中第 1 维是 “猫的轮廓”（峰值维度），第 2 维是 “耳朵纹理”，第 3 维是 “爪子颜色”。
+	    - 猫的头部 patch 向量：[5.2, 0.3, 0.2]（第 1 维是峰值）；
+	    - 猫的身体 patch 向量：[4.8, 0.2, 0.1]（第 1 维是峰值）；
+	        
+	        这两个向量在 3 维空间中，都主要朝着 “第 1 维” 的方向，看起来就像 “两根几乎平行的箭头”—— 这就是 “方向相似”。
+	
+	### 第三步：为什么这个特性会导致分割噪声？
+	
+	理解这句话的最终目的，是要关联到 “残差连接是噪声来源” 的核心结论，这里可以补充逻辑闭环：语义分割需要 “区分不同局部 patch 的类别”（比如把 “猫的头部”“猫的身体” 归为 “猫”，把 “背景地毯” 归为 “地毯”），而区分的关键是 “特征向量的差异”。
+	
+	但残差连接的特征向量 “共享峰值维度 + 方向相似”：
+	
+	- 同一物体的不同 patch（比如猫的头和身体）：特征向量差异小，看似没问题；
+	- 不同物体的 patch（比如猫的身体和背景地毯）：如果地毯的残差特征也被 “全局主导属性”（比如 “室内场景”）压制，导致它的峰值维度和猫的峰值维度接近 —— 那么猫和地毯的特征向量方向也会相似，模型就无法区分，最终把地毯误判为猫，产生 “噪声”。
+	
+	### 总结：一句话讲清逻辑链
+	
+	CLIP 的残差连接为了保留全局图文对齐的特征，会让大多数 patch 的特征向量都把 “全局主导属性”（比如猫的轮廓、室内场景）作为峰值维度，这些向量在高维 Latent 空间中都朝着相似的方向，导致不同局部的特征差异被掩盖，最终引发分割噪声。
+
+[^3]: SCLIP [40] 可大致视为 $\alpha=2$ 的特例，即 $Proj((Attn_{qq}+Attn_{kk}) \cdot v) \approx Proj(2 Attn_{qk} \cdot v) \approx 2 X_{attn}$ 。
+
+[^4]: 为简洁起见，此处省略了最终投影层
