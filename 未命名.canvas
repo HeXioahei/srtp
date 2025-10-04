@@ -1,6 +1,9 @@
 {
 	"nodes":[
-		{"id":"4d6c6f5ae10f9b11","x":-125,"y":-30,"width":250,"height":60,"type":"text","text":""}
+		{"id":"4d6c6f5ae10f9b11","type":"text","text":"架构一览","x":-125,"y":-54,"width":125,"height":50},
+		{"id":"8cf8a5409d76c45e","x":100,"y":-260,"width":250,"height":60,"type":"text","text":""}
 	],
-	"edges":[]
+	"edges":[
+		{"id":"9493881355a13799","fromNode":"4d6c6f5ae10f9b11","fromSide":"right","toNode":"8cf8a5409d76c45e","toSide":"left"}
+	]
 }
