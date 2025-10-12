@@ -79,7 +79,7 @@ Y=X+\text{Proj}\left(\text{Attn}_{qk} \cdot V\right) \tag{2}$$$$Z=Y+\text{FFN}(Y
 ![image.png](https://youki-1330066034.cos.ap-guangzhou.myqcloud.com/machine-learning/202510081841460.png)
 
 
-注：²“VFM 蒸馏” 指将 CLIP 的 $X_{\text{dense}}$ 与 VFM 的 $X_{\text{dense}}$ 的特征自相关性对齐；³“自蒸馏” 指将 $X_{\text{dense}}$ 的区域特征与其对应的 [CLS] 表示对齐。
+注：“VFM 蒸馏” 指将 CLIP 的 $X_{\text{dense}}$ 与 VFM 的 $X_{\text{dense}}$ 的特征自相关性对齐；³“自蒸馏” 指将 $X_{\text{dense}}$ 的区域特征与其对应的 [CLS] 表示对齐。
 
 ## 3. 方法设计
 
