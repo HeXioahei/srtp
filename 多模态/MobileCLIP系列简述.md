@@ -1,4 +1,4 @@
-### 一、论文核心思想与创新点总结
+5### 一、论文核心思想与创新点总结
 
 #### 1. **MobileCLIP: Fast Image-Text Models through Multi-Modal Reinforced Training**
 - **核心问题**：传统CLIP模型计算开销大、延迟高，难以在移动设备上部署。

@@ -127,3 +127,5 @@ df -h
 
 ```
 
+# wget下载一半断开
+[wget下载一半断开了继续下载方法及后台下载和查看日志_终端下载中断继续下载命令-CSDN博客](https://blog.csdn.net/dy105936/article/details/108244584)
